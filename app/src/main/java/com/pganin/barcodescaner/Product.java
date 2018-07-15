@@ -1,13 +1,13 @@
 package com.pganin.barcodescaner;
 
-public class ProductPage {
+public class Product {
     private String BarCode="";
     private String Name = "";
     private int Quantity = 0;
     private float ValueBuy = .0f;
     private float ValueOpt = .0f;
     private float ValueSale = .0f;
-    public ProductPage(String barCode, String name, int quantity, float valueBuy, float valueOpt, float valueSale){
+    public Product(String barCode, String name, int quantity, float valueBuy, float valueOpt, float valueSale){
         BarCode = barCode;
         Name = name;
         Quantity = quantity;
