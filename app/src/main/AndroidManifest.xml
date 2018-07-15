@@ -26,5 +26,12 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden"
             tools:ignore="WrongManifestParent" />
+        <activity
+            android:name=".ProductPage"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:ignore="WrongManifestParent" />
     </application>
 </manifest>
