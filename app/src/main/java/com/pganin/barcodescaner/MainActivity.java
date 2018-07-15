@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("MainActivity", "Scanned");
             Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, ProductPage.class);
+            startService(intent);
         }
     }
 }
