@@ -17,10 +17,10 @@ public class DataBase {
     }
 
     public void Init(){
-      //  StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-       // StrictMode.setThreadPolicy(policy);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/barcode",
                     "Pauls", "123456");
