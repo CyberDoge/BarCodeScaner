@@ -10,18 +10,32 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+    public static DataBase DB = new DataBase();
+    public static ArrayList<Product> products = new ArrayList<>();
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        DB.Init();
     }
     public void scanMarginScanner(View view) {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setOrientationLocked(false);
         integrator.setCaptureActivity(SmallCaptureActivity.class);
         integrator.initiateScan();
+    }
+    public  void ivennted(View view){
+        products = DB.GetProducts();
+        DB.AddProduct(new Product("123", "test1", 1, .0f, 1.0f, 2.0f));
+        for( Product p:products){
+            System.out.println("");
+        }
+        Intent intent = new Intent(this, ProductPage.class);
+        startService(intent);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -46,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
         } else {
             Log.d("MainActivity", "Scanned");
-            Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ProductPage.class);
             startService(intent);
+            Toast.makeText(this, "Scanned : " + result.getContents(), Toast.LENGTH_LONG).show();
+
         }
+
     }
 }

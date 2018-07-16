@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.1'
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.pganin.barcodescaner"
@@ -26,16 +26,25 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    compile('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
-
-    compile 'com.google.zxing:core:3.3.0'
-
+    implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation project(':jtds-1.3.1')
+    implementation 'net.sourceforge.jtds:jtds:1.3.1'
+}
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "com.android.support") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "26.+"
+            }
+        }
+    }
 }
 if(project.hasProperty('bintray_user') && project.hasProperty('bintray_key')) {
     bintray {

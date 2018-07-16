@@ -1,5 +1,7 @@
 package com.pganin.barcodescaner;
 
+import android.os.StrictMode;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,10 +17,13 @@ public class DataBase {
     }
 
     public void Init(){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/barcode",
-                    "root", "");
+                    "Pauls", "123456");
             if (conn == null) {
                 System.out.println("Can't connect to DB!");
                 System.exit(0);
@@ -87,5 +92,11 @@ public class DataBase {
         }catch (Exception e){
             System.out.println(e);
         }
+    }
+
+    public static void main(String[] args) {
+        DataBase db = new DataBase();
+        db.Init();
+
     }
 }
