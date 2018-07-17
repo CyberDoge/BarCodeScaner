@@ -13,14 +13,14 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    public static DataBase DB ;
+    public static DataBase DB  = new DataBase();
     public static ArrayList<Product> products = new ArrayList<>();
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        DB = new DataBase();
+        //DB
         DB.Init();
         //DB.execute();
     }
@@ -62,10 +62,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
         } else {
             Log.d("MainActivity", "Scanned");
-            Intent intent = new Intent(this, ProductPage.class);
-            startService(intent);
-            Toast.makeText(this, "Scanned : " + result.getContents(), Toast.LENGTH_LONG).show();
-
+            String barcode = result.getContents();
+            Toast.makeText(this, "Scanned : " + barcode, Toast.LENGTH_LONG).show();
+            if(!DB.FindProductByBarCode(barcode)){
+                Intent intent = new Intent(this, ProductPage.class);
+                startService(intent);
+            }
         }
 
     }

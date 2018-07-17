@@ -23,14 +23,11 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
         try {
             //Class.forName("net.sourceforge.jtds.jdbc.Driver");
             //Class.forName("");
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.85:3306/barcode",
-                    "root", "evdh5r36");
-            if (conn == null) {
-                System.out.println("Can't connect to DB!");
-                System.exit(0);
-            }
+                    "jdbc:mysql://192.168.10.85:3306/test",
+                    "test", "");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,7 +37,7 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
         ArrayList<Product> products = new ArrayList<>();
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM catalog");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Catalog");
 
             while (rs.next()) {
                 Product product = new Product(
@@ -62,7 +59,7 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     public boolean FindProductByBarCode(String barcode){
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `catalog` WHERE barcode='"+barcode+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `Catalog` WHERE barcode='"+barcode+"'");
 
             if (rs.next()) {
                 Product product = new Product(
@@ -84,7 +81,7 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     public void AddProduct(Product product){
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO `catalog`(`id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`, `name_optional`) " +
+            stmt.executeUpdate("INSERT INTO `Catalog`(`id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`, `name_optional`) " +
                     "VALUES (0, '"+product.getBarCode()+"'," +
                     " '"+product.getName()+"'," +
                     " "+product.getQuantity()+"," +
@@ -108,7 +105,7 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
 
 
 
-   // @Override
+    //@Override
     protected Boolean doInBackground(String... strings) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -117,7 +114,7 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
 
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.85:3306/barcode",
+                    "jdbc:mysql://192.168.10.1:3306/barcode",
                     "root", "evdh5r36");//DriverManager.getConnection(ConnURL);
                     //
             if (conn == null) {
