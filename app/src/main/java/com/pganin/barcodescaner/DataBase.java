@@ -17,13 +17,15 @@ public class DataBase {
     }
 
     public void Init(){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
         try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            //Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            //Class.forName("");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/barcode",
-                    "Pauls", "123456");
+                    "root", "");
             if (conn == null) {
                 System.out.println("Can't connect to DB!");
                 System.exit(0);
@@ -97,6 +99,9 @@ public class DataBase {
     public static void main(String[] args) {
         DataBase db = new DataBase();
         db.Init();
-
+        ArrayList<Product> products = db.GetProducts();
+        for(Product p: products){
+            System.out.println("code " + p.getBarCode());
+        }
     }
 }
