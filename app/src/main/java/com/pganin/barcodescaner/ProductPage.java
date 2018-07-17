@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.journeyapps.barcodescanner.CaptureActivity;
+
 
 public class ProductPage extends CaptureActivity {
     @Override

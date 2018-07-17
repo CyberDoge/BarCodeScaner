@@ -13,14 +13,16 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    public static DataBase DB = new DataBase();
+    public static DataBase DB ;
     public static ArrayList<Product> products = new ArrayList<>();
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        DB = new DataBase();
         DB.Init();
+        //DB.execute();
     }
     public void scanMarginScanner(View view) {
         IntentIntegrator integrator = new IntentIntegrator(this);

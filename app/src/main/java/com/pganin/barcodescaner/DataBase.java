@@ -1,5 +1,6 @@
 package com.pganin.barcodescaner;
 
+import android.os.AsyncTask;
 import android.os.StrictMode;
 
 import java.sql.Connection;
@@ -8,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class DataBase {
+public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     Connection conn = null;
     private static Product Last_Product = null;
 
@@ -17,15 +18,15 @@ public class DataBase {
     }
 
     public void Init(){
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         try {
             //Class.forName("net.sourceforge.jtds.jdbc.Driver");
             //Class.forName("");
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/barcode",
-                    "root", "");
+                    "jdbc:mysql://192.168.10.85:3306/barcode",
+                    "root", "evdh5r36");
             if (conn == null) {
                 System.out.println("Can't connect to DB!");
                 System.exit(0);
@@ -102,6 +103,31 @@ public class DataBase {
         ArrayList<Product> products = db.GetProducts();
         for(Product p: products){
             System.out.println("code " + p.getBarCode());
+        }
+    }
+
+
+
+   // @Override
+    protected Boolean doInBackground(String... strings) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        try {
+
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://192.168.10.85:3306/barcode",
+                    "root", "evdh5r36");//DriverManager.getConnection(ConnURL);
+                    //
+            if (conn == null) {
+                System.out.println("Can't connect to DB!");
+                System.exit(0);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
