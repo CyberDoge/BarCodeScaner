@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.new_game:
+            case R.id.scan:
                 IntentIntegrator integrator = new IntentIntegrator(this);
                 integrator.setOrientationLocked(false);
                 integrator.setCaptureActivity(SmallCaptureActivity.class);
