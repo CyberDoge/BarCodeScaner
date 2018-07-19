@@ -59,13 +59,20 @@ public class TableActivity  {
             textView1.setText(p.getName());
 
             TextView textView2 = new TextView(context);
-            textView2.setText(""+p.getValueBuy());
+            textView2.setText("Закуп:");
+
+            TextView textView22 = new TextView(context);
+            textView22.setText(""+p.getValueBuy());
 
             TextView textView3 = new TextView(context);
-            textView3.setText(""+p.getValueOpt());
+            textView3.setText("Опт:");
+            TextView textView33 = new TextView(context);
+            textView33.setText(""+p.getValueOpt());
 
             TextView textView4 = new TextView(context);
-            textView4.setText(""+p.getValueSale());
+            textView4.setText("Розница:");
+            TextView textView44 = new TextView(context);
+            textView44.setText(""+p.getValueSale());
 
             TextView textView5 = new TextView(context);
             textView5.setText("");
@@ -81,12 +88,15 @@ public class TableActivity  {
 
             tableRow2.setBackgroundColor(0xdcdcdcdd);
             tableRow2.addView(textView2);
+            tableRow2.addView(textView22);
 
             tableRow3.setBackgroundColor(0xdcdcdcdd);
             tableRow3.addView(textView3);
+            tableRow3.addView(textView33);
 
             tableRow4.setBackgroundColor(0xdcdcdcdd);
             tableRow4.addView(textView4);
+            tableRow4.addView(textView44);
 
             tableRow5.addView(textView5);
 
