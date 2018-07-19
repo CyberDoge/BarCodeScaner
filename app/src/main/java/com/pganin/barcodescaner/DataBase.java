@@ -108,37 +108,5 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
             System.out.println(e);
         }
     }
-    public static void main(String[] args) {
-        DataBase db = new DataBase();
-        db.Init();
-        ArrayList<Product> products = db.GetProducts();
-        for(Product p: products){
-            System.out.println("code " + p.getBarCode());
-        }
-    }
 
-
-
-    //@Override
-    protected Boolean doInBackground(String... strings) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        try {
-
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.1:3306/barcode",
-                    "root", "evdh5r36");//DriverManager.getConnection(ConnURL);
-                    //
-            if (conn == null) {
-                System.out.println("Can't connect to DB!");
-                System.exit(0);
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
