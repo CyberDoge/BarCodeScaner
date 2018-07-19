@@ -88,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
             if(DB.FindProductByBarCode(barcode))
             {
                 Intent intent = new Intent(this, ProductPage.class);
-                intent.putExtra("is_created", true);
+                intent.putExtra("is_created", true);//
                 intent.putExtra("name", DB.getLast_Product().getName());
+                intent.putExtra("barcode", barcode);
                 intent.putExtra("quantity", DB.getLast_Product().getQuantity());
                 intent.putExtra("valueBuy", DB.getLast_Product().getValueBuy());
                 intent.putExtra("valueOpt", DB.getLast_Product().getValueOpt());
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }else {
                 Intent intent = new Intent(this, ProductPage.class);
                 intent.putExtra("is_created", false);
+                intent.putExtra("barcode", barcode);
                 startActivity(intent);
             }
         }

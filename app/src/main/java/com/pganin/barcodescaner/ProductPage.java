@@ -79,5 +79,7 @@ public class ProductPage extends Activity {
                     Float.parseFloat(valueSaleText.getText().toString()));
             MainActivity.DB.EditProduct(product);
         }
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

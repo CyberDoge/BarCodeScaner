@@ -80,8 +80,8 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     public void AddProduct(Product product){
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO `Catalog`(`id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`, `name_optional`) " +
-                    "VALUES (0, '"+product.getBarCode()+"'," +
+            stmt.executeUpdate("INSERT INTO `Catalog`( `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`, `name_optional`) " +
+                    "VALUES ('"+product.getBarCode()+"'," +
                     " '"+product.getName()+"'," +
                     " "+product.getQuantity()+"," +
                     " "+product.getValueBuy()+"," +
@@ -95,7 +95,9 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     public void EditProduct(Product product){
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("UPDATE `Catalog` SET `name`='"+product.getName()+"', "+
+            stmt.executeUpdate("UPDATE `Catalog` SET `id`=@rowid:=@rowid+1 " +
+                    "`BarCode`='"+product.getBarCode()+"', "+
+                    "`name`='"+product.getName()+"', "+
                     "`quantity`="+product.getQuantity()+", "+
                     "`valueBuy`="+product.getValueBuy()+", "+
                     "`valueSale`="+product.getValueSale()+", "+
