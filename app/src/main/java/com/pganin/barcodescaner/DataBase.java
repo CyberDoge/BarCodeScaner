@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     Connection conn = null;
-    private static Product Last_Product = null;
+    private  Product Last_Product = null;
 
-    public static Product getLast_Product() {
+    public  Product getLast_Product() {
         return Last_Product;
     }
 
@@ -59,10 +59,10 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
     public boolean FindProductByBarCode(String barcode){
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `Catalog` WHERE barcode='"+barcode+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `Catalog` WHERE BarCode='"+barcode+"'");
 
             if (rs.next()) {
-                Product product = new Product(
+                Last_Product = new Product(
                         rs.getString("barcode"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
@@ -70,7 +70,6 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
                         rs.getFloat("valueOpt"),
                         rs.getFloat("valueSale")
                 );
-                Last_Product = product;
                 return true;
             }
         }catch (Exception e){
@@ -93,7 +92,20 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
             System.out.println(e);
         }
     }
-
+    public void EditProduct(Product product){
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("UPDATE `Catalog` SET `name`='"+product.getName()+"', "+
+                    "`quantity`="+product.getQuantity()+", "+
+                    "`valueBuy`="+product.getValueBuy()+", "+
+                    "`valueSale`="+product.getValueSale()+", "+
+                    "`valueOpt`="+product.getValueOpt()+
+                    " WHERE `BarCode`='"+product.getBarCode()+"'" );
+            Last_Product = product;
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
     public static void main(String[] args) {
         DataBase db = new DataBase();
         db.Init();

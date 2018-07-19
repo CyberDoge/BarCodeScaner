@@ -47,10 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 integrator.setCaptureActivity(SmallCaptureActivity.class);
                 integrator.initiateScan();
                 return true;
-            case R.id.help:
-                Intent intent = new Intent(this, ProductPage.class);
-                startActivity(intent);
-                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -88,9 +85,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainActivity", "Scanned");
             String barcode = result.getContents();
             Toast.makeText(this, "Scanned : " + barcode, Toast.LENGTH_LONG).show();
-            //if(!DB.FindProductByBarCode(barcode))
+            if(DB.FindProductByBarCode(barcode))
             {
                 Intent intent = new Intent(this, ProductPage.class);
+                intent.putExtra("is_created", true);
+                intent.putExtra("name", DB.getLast_Product().getName());
+                intent.putExtra("quantity", DB.getLast_Product().getQuantity());
+                intent.putExtra("valueBuy", DB.getLast_Product().getValueBuy());
+                intent.putExtra("valueOpt", DB.getLast_Product().getValueOpt());
+                intent.putExtra("valueSale", DB.getLast_Product().getValueSale());
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(this, ProductPage.class);
+                intent.putExtra("is_created", false);
                 startActivity(intent);
             }
         }
