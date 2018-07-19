@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         //DB
         DB.Init();
+        products = null;
         products = DB.GetProducts();
         TableActivity tableActivity = new TableActivity();
         ScrollView scrollView = new ScrollView(getApplicationContext());

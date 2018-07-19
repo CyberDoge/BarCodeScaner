@@ -52,7 +52,7 @@ public class ProductPage extends Activity {
     }
 
     public void saveButton(View view){
-        if(isCreated) {
+        if(!isCreated) {
             EditText nameText = (EditText) findViewById(R.id.editText);
             EditText quantityText = (EditText) findViewById(R.id.editText2);
             EditText valueBuyText = (EditText) findViewById(R.id.editText3);
