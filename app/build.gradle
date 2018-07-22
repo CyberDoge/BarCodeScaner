@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.google.zxing:core:3.3.0'
     implementation project(':mysql-connector-java-5.1.17-bin')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
@@ -48,7 +49,7 @@ configurations.all {
         }
     }
 }
-if(project.hasProperty('bintray_user') && project.hasProperty('bintray_key')) {
+if (project.hasProperty('bintray_user') && project.hasProperty('bintray_key')) {
     bintray {
         user = bintray_user
         key = bintray_key

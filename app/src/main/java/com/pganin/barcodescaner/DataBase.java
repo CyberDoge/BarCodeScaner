@@ -9,14 +9,35 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class DataBase {//extends AsyncTask<String, Void, Boolean> {
+public class DataBase {//extends AsyncTask {
     Connection conn = null;
     private  Product Last_Product = null;
+    private boolean isCreated = false;
+
+    public boolean isCreated() {
+        return isCreated;
+    }
 
     public  Product getLast_Product() {
         return Last_Product;
     }
 
+    public void AddTests(int id){
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("INSERT INTO `Catalog`( `id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`) " +
+                    "VALUES ( "+id+"," +
+                    " 'barcode_"+id+"'," +
+                    " 'name_"+id+"'," +
+                    " "+id+"," +
+                    " "+id+"," +
+                    " "+id+"," +
+                    " "+id+" )");
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
     public void Init(){
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -27,7 +48,7 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
             conn = DriverManager.getConnection(
                     "jdbc:mysql://192.168.3.1:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",
                     "pauls", "123456");
-
+            isCreated = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -135,4 +156,9 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
         }
     }
 
+    //@Override
+    protected Boolean doInBackground(Object[] objects) {
+        Init();
+        return false;
+    }
 }

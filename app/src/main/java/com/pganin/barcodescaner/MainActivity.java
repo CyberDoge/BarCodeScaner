@@ -1,8 +1,10 @@
 package com.pganin.barcodescaner;
 
+import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TableLayout;
@@ -24,30 +27,63 @@ import android.widget.Toast;
 import android.app.SearchManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    public static DataBase DB  = new DataBase();
+public class MainActivity extends AppCompatActivity { //extends ListActivity implements OnScrollListener {//
+    public static DataBase DB;
     public static ArrayList<Product> products = new ArrayList<>();
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private ListView list;
+    private StringAdapter adapter;
+    private View footer;
+    private LoadMoreAsyncTask loadingTask = new LoadMoreAsyncTask();
+    Main2Activity main2Activity = new Main2Activity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         //DB
-        DB.Init();
+        if(DB == null){
+            DB = new DataBase();
+            DB.Init();
+            /*for(int i=250; i <1250; i++){
+                DB.AddTests(i);
+            }*/
+        }else if(!DB.isCreated()){
+            DB.Init();
+        }
+
         products = null;
         products = DB.GetProducts();
-        TableActivity tableActivity = new TableActivity();
+      /*  TableActivity tableActivity = new TableActivity();
         ScrollView scrollView = new ScrollView(getApplicationContext());
         scrollView.addView(tableActivity.Create(getApplicationContext(), products));
         setContentView( scrollView );
+*/
+        //main2Activity.
+        //setContentView( main2Activity.getListView() );
         //DB.execute();
     }
+    public Collection<Product> generate(int startIndex, int count) {
+        List<Product> l = new ArrayList<Product>(count);
+        for (int i = 0; i < count; i++) {
+            l.add(products.get(startIndex+i));
+        }
+        return l;
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -67,6 +103,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     android.support.v7.widget.SearchView searchView;
+    private void runtest(){
+        Intent intent = new Intent(this, Main2Activity.class);
+        startActivity(intent);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -81,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("on click");
+                runtest();
             }
         });
         searchView.setOnCloseListener(new android.support.v7.widget.SearchView.OnCloseListener() {
@@ -232,5 +272,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+    private class LoadMoreAsyncTask extends AsyncTask<Integer, Void, Collection<Product>> {
+        @SuppressWarnings("unchecked")
+        @Override
+        protected Collection<Product> doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+                Collection<Product> data = generate(params[0].intValue(), 20);
+                return data;
+            } catch (Exception e) {
+                Log.e(TAG, "Loading data", e);
+            }
+            return Collections.EMPTY_LIST;
+        }
+
+        @Override
+        protected void onPostExecute(Collection<Product> data) {
+            if (data.isEmpty()) {
+                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            adapter.add(data);
+            adapter.notifyDataSetChanged();
+            int index = list.getFirstVisiblePosition();
+            int top = (list.getChildAt(0) == null) ? 0 : list.getChildAt(0).getTop();
+            list.setSelectionFromTop(index, top);
+        }
     }
 }
