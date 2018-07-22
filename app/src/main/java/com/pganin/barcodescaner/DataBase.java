@@ -25,13 +25,36 @@ public class DataBase {//extends AsyncTask<String, Void, Boolean> {
             //Class.forName("");
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.85:3306/test?useUnicode=true&characterEncoding=UTF8",
-                    "test", "");
+                    "jdbc:mysql://192.168.3.1:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",
+                    "pauls", "123456");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+    public ArrayList<Product> FindProducts(String text){
+        ArrayList<Product> products = new ArrayList<>();
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Catalog WHERE MATCH (name) AGAINST ('"+text+"')");
+
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getString("barcode"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getFloat("valueBuy"),
+                        rs.getFloat("valueOpt"),
+                        rs.getFloat("valueSale")
+                );
+                products.add(product);
+                Last_Product = product;
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return products;
     }
     public ArrayList<Product> GetProducts(){
         ArrayList<Product> products = new ArrayList<>();

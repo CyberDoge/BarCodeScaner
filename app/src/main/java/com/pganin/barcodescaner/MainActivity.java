@@ -1,6 +1,7 @@
 package com.pganin.barcodescaner;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -58,64 +59,119 @@ public class MainActivity extends AppCompatActivity {
                 integrator.initiateScan();
                 return true;
             case R.id.action_search:
-
+                //Intent intent = new Intent(this, SearchResultsActivity.class);
+                //startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    SearchView searchView;
+    android.support.v7.widget.SearchView searchView;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuInflater inflater = getMenuInflater();
+        // Inflate menu to add items to action bar if it is present.
+        inflater.inflate(R.menu.main_menu, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+         searchView =
+                (android.support.v7.widget.SearchView) menu.findItem(R.id.action_search).getActionView();
 
-        if (searchItem != null) {
-            searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
-                    //some operation
-                    return true;
-                }
-            });
-            searchView.setOnSearchClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //some operation
-                }
-            });
-            EditText searchPlate = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            searchPlate.setHint("Search");
-            View searchPlateView = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-            searchPlateView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            // use this method for search process
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // use this method when query submitted
-                    //Toast.makeText(context, query, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("on click");
+            }
+        });
+        searchView.setOnCloseListener(new android.support.v7.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                products = null;
+                products = DB.GetProducts();
+                TableActivity tableActivity = new TableActivity();
+                ScrollView scrollView = new ScrollView(getApplicationContext());
+                scrollView.addView(tableActivity.Create(getApplicationContext(), products));
+                setContentView( scrollView );
+                return true;
+            }
+        });
+        searchView.setOnSuggestionListener(new android.support.v7.widget.SearchView.OnSuggestionListener(){
+            @Override
+            public boolean onSuggestionClick(int position){
+                System.out.println("onSuggestionClick");
+                return false;
+            }
+            public boolean onSuggestionSelect(int position){
+                System.out.println("onSuggestionSelect");
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                SearchActivityWindow(query);
+                System.out.println(query);
+                return false;
+            }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    // use this method for auto complete search process
-                    return false;
-                }
-            });
-            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            @Override
+            public boolean onQueryTextChange(String newText) {
 
-        }
-        return super.onCreateOptionsMenu(menu);
+                if(newText == null || newText.equals("")){
+                    products = null;
+                    products = DB.GetProducts();
+                    TableActivity tableActivity = new TableActivity();
+                    ScrollView scrollView = new ScrollView(getApplicationContext());
+                    scrollView.addView(tableActivity.Create(getApplicationContext(), products));
+                    setContentView( scrollView );
+                }
+                return false;
+            }
+        });
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        //searchView.
+
+        return true;
+        //return super.onCreateOptionsMenu(menu);
     }
+    public void refreshBtn(){
+        products = null;
+        products = DB.GetProducts();
+        TableActivity tableActivity = new TableActivity();
+        ScrollView scrollView = new ScrollView(getApplicationContext());
+        scrollView.addView(tableActivity.Create(getApplicationContext(), products));
+        setContentView( scrollView );
+    }
+    private void SearchActivityWindow(String text){
 
+        products = null;
+        products = DB.FindProducts(text);
+        if(products.size() != 0) {
+            TableActivity tableActivity = new TableActivity();
+            ScrollView scrollView = new ScrollView(getApplicationContext());
+            scrollView.addView(tableActivity.Create(getApplicationContext(), products));
+            setContentView(scrollView);
+        }else {
+
+            products = null;
+            products = DB.GetProducts();
+            TableActivity tableActivity = new TableActivity();
+            ScrollView scrollView = new ScrollView(getApplicationContext());
+            scrollView.addView(tableActivity.Create(getApplicationContext(), products));
+            setContentView( scrollView );
+            Toast.makeText(this, "Ничего не найдено", Toast.LENGTH_LONG).show();
+        }
+        //Intent intent = new Intent(this, SearchResultsActivity.class);
+       // startActivity(intent);
+    }
     @Override
     public void onBackPressed() {
         if (!searchView.isIconified()) {
             searchView.setIconified(true);
             //findViewById(R.id.).setVisibility(View.VISIBLE);
+
         } else {
             super.onBackPressed();
         }
