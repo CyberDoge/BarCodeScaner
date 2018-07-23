@@ -38,47 +38,60 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity { //extends ListActivity implements OnScrollListener {//
-    public static DataBase DB;
-    public static ArrayList<Product> products = new ArrayList<>();
+public class MainActivity extends AppCompatActivity implements OnScrollListener { //extends ListActivity implements OnScrollListener {//
+
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     private static final String TAG = MainActivity.class.getSimpleName();
-
+//
     private ListView list;
     private StringAdapter adapter;
     private View footer;
     private LoadMoreAsyncTask loadingTask = new LoadMoreAsyncTask();
-    Main2Activity main2Activity = new Main2Activity();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         //DB
-        if(DB == null){
-            DB = new DataBase();
-            DB.Init();
+        if(Repository.getDB() == null){
+            Repository.setDB( new DataBase() );
+            Repository.getDB().Init();
             /*for(int i=250; i <1250; i++){
                 DB.AddTests(i);
             }*/
-        }else if(!DB.isCreated()){
-            DB.Init();
+        }else if(!Repository.getDB().isCreated()){
+            Repository.getDB().Init();
         }
 
-        products = null;
-        products = DB.GetProducts();
+        Repository.setProducts( Repository.getDB().GetProducts());
+
       /*  TableActivity tableActivity = new TableActivity();
         ScrollView scrollView = new ScrollView(getApplicationContext());
         scrollView.addView(tableActivity.Create(getApplicationContext(), products));
         setContentView( scrollView );
 */
-        //main2Activity.
-        //setContentView( main2Activity.getListView() );
-        //DB.execute();
+        if(adapter == null)
+            adapter = new StringAdapter(this);
+
+        if(footer == null)
+        footer = getLayoutInflater().inflate(R.layout.listview_footer, null);
+        //ListActivity listActivity = new ListActivity();
+        //new Intent(MainActivity.this, ListActivity.class);
+        //listActivity.onCreate(savedInstanceState, );
+        list = (ListView)findViewById(R.id.list);//listActivity.getListView();
+        list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
+        list.setAdapter(adapter);
+        list.setOnScrollListener(this);
+
+        loadingTask.execute(0);
+
     }
+
     public Collection<Product> generate(int startIndex, int count) {
         List<Product> l = new ArrayList<Product>(count);
         for (int i = 0; i < count; i++) {
-            l.add(products.get(startIndex+i));
+            l.add(Repository.getProducts().get(startIndex+i));
         }
         return l;
     }
@@ -104,8 +117,16 @@ public class MainActivity extends AppCompatActivity { //extends ListActivity imp
     }
     android.support.v7.widget.SearchView searchView;
     private void runtest(){
-        Intent intent = new Intent(this, Main2Activity.class);
+        Intent intent = new Intent(this, SearchResultsActivity.class);
         startActivity(intent);
+    }
+    private void onCloseSearch(){
+        list = (ListView)findViewById(R.id.list);//listActivity.getListView();
+        list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
+        list.setAdapter(adapter);
+        list.setOnScrollListener(this);
+
+        loadingTask.execute(0);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,12 +148,7 @@ public class MainActivity extends AppCompatActivity { //extends ListActivity imp
         searchView.setOnCloseListener(new android.support.v7.widget.SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                products = null;
-                products = DB.GetProducts();
-                TableActivity tableActivity = new TableActivity();
-                ScrollView scrollView = new ScrollView(getApplicationContext());
-                scrollView.addView(tableActivity.Create(getApplicationContext(), products));
-                setContentView( scrollView );
+                onCloseSearch();
                 return true;
             }
         });
@@ -159,12 +175,7 @@ public class MainActivity extends AppCompatActivity { //extends ListActivity imp
             public boolean onQueryTextChange(String newText) {
 
                 if(newText == null || newText.equals("")){
-                    products = null;
-                    products = DB.GetProducts();
-                    TableActivity tableActivity = new TableActivity();
-                    ScrollView scrollView = new ScrollView(getApplicationContext());
-                    scrollView.addView(tableActivity.Create(getApplicationContext(), products));
-                    setContentView( scrollView );
+                    onCloseSearch();
                 }
                 return false;
             }
@@ -176,31 +187,19 @@ public class MainActivity extends AppCompatActivity { //extends ListActivity imp
         return true;
         //return super.onCreateOptionsMenu(menu);
     }
-    public void refreshBtn(){
-        products = null;
-        products = DB.GetProducts();
-        TableActivity tableActivity = new TableActivity();
-        ScrollView scrollView = new ScrollView(getApplicationContext());
-        scrollView.addView(tableActivity.Create(getApplicationContext(), products));
-        setContentView( scrollView );
-    }
+
     private void SearchActivityWindow(String text){
 
-        products = null;
-        products = DB.FindProducts(text);
+        ArrayList<Product> products = Repository.getDB().FindProducts(text);
         if(products.size() != 0) {
-            TableActivity tableActivity = new TableActivity();
-            ScrollView scrollView = new ScrollView(getApplicationContext());
-            scrollView.addView(tableActivity.Create(getApplicationContext(), products));
-            setContentView(scrollView);
+            list = (ListView)findViewById(R.id.list);//listActivity.getListView();
+            list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
+            list.setAdapter(adapter);
+            list.setOnScrollListener(this);
+
+            loadingTask.execute(0);
         }else {
 
-            products = null;
-            products = DB.GetProducts();
-            TableActivity tableActivity = new TableActivity();
-            ScrollView scrollView = new ScrollView(getApplicationContext());
-            scrollView.addView(tableActivity.Create(getApplicationContext(), products));
-            setContentView( scrollView );
             Toast.makeText(this, "Ничего не найдено", Toast.LENGTH_LONG).show();
         }
         //Intent intent = new Intent(this, SearchResultsActivity.class);
@@ -253,16 +252,16 @@ public class MainActivity extends AppCompatActivity { //extends ListActivity imp
             Log.d("MainActivity", "Scanned");
             String barcode = result.getContents();
             Toast.makeText(this, "Scanned : " + barcode, Toast.LENGTH_LONG).show();
-            if(DB.FindProductByBarCode(barcode))
+            if(Repository.getDB().FindProductByBarCode(barcode))
             {
                 Intent intent = new Intent(this, ProductPage.class);
                 intent.putExtra("is_created", true);//
-                intent.putExtra("name", DB.getLast_Product().getName());
+                intent.putExtra("name", Repository.getDB().getLast_Product().getName());
                 intent.putExtra("barcode", barcode);
-                intent.putExtra("quantity", DB.getLast_Product().getQuantity());
-                intent.putExtra("valueBuy", DB.getLast_Product().getValueBuy());
-                intent.putExtra("valueOpt", DB.getLast_Product().getValueOpt());
-                intent.putExtra("valueSale", DB.getLast_Product().getValueSale());
+                intent.putExtra("quantity", Repository.getDB().getLast_Product().getQuantity());
+                intent.putExtra("valueBuy", Repository.getDB().getLast_Product().getValueBuy());
+                intent.putExtra("valueOpt", Repository.getDB().getLast_Product().getValueOpt());
+                intent.putExtra("valueSale", Repository.getDB().getLast_Product().getValueSale());
                 startActivity(intent);
             }else {
                 Intent intent = new Intent(this, ProductPage.class);
@@ -273,6 +272,21 @@ public class MainActivity extends AppCompatActivity { //extends ListActivity imp
         }
 
     }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisible, int visibleCount, int totalCount) {
+        boolean loadMore = firstVisible + visibleCount >= totalCount;
+
+        if (loadMore && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
+            loadingTask = new LoadMoreAsyncTask();
+            loadingTask.execute(totalCount);
+        }
+    }
+
     private class LoadMoreAsyncTask extends AsyncTask<Integer, Void, Collection<Product>> {
         @SuppressWarnings("unchecked")
         @Override

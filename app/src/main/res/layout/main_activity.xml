@@ -1,83 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
+<!--ScrollView
+xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#eeeeee"
+    android:stretchColumns="*"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:background="#eeeeee"
         android:stretchColumns="*"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:background="#eeeeee"
-            android:stretchColumns="*"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <TableRow android:background="#cccccc"
-                android:padding="5dp">
+        <TableRow android:background="#cccccc"
+            android:padding="5dp">
 
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="1dp"
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="1dp"
 
-                    android:layout_height="130dp"
-                    android:background="#fa2255"
-                    android:scaleType="matrix"
-                    android:src="@drawable/ic_launcher_foreground" />
+                android:layout_height="130dp"
+                android:background="#fa2255"
+                android:scaleType="matrix"
+                android:src="@drawable/ic_launcher_foreground" />
 
-                <TextView android:layout_width="fill_parent"
+            <TextView android:layout_width="fill_parent"
 
-                    android:layout_marginLeft="10dp"
-                    android:gravity="left"
-                    android:text="Name"
-                    android:textAppearance="?android:attr/textAppearanceLarge">
+                android:layout_marginLeft="10dp"
+                android:gravity="left"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceLarge">
 
-                </TextView>
+            </TextView>
 
-            </TableRow>
-        </TableLayout>
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:background="#eeeeee"
-            android:stretchColumns="*"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <TableRow android:background="#cccccc"
-                android:padding="5dp">
-                <TextView android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="zakyp"
-                    android:textAppearance="?android:attr/textAppearanceLarge">
-
-                </TextView>
-                <TextView android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="opt"
-                    android:textAppearance="?android:attr/textAppearanceLarge">
-
-                </TextView>
-                <TextView android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="roz"
-                    android:textAppearance="?android:attr/textAppearanceLarge">
-
-                </TextView>
-            </TableRow>
-
-        </TableLayout>
+        </TableRow>
     </TableLayout>
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
-</ScrollView>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="#eeeeee"
+        android:stretchColumns="*"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TableRow android:background="#cccccc"
+            android:padding="5dp">
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="zakyp"
+                android:textAppearance="?android:attr/textAppearanceLarge">
+
+            </TextView>
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="opt"
+                android:textAppearance="?android:attr/textAppearanceLarge">
+
+            </TextView>
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="roz"
+                android:textAppearance="?android:attr/textAppearanceLarge">
+
+            </TextView>
+        </TableRow>
+
+    </TableLayout>
+</TableLayout>
+</ScrollView-->

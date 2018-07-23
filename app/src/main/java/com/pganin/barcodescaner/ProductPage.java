@@ -64,7 +64,7 @@ public class ProductPage extends Activity {
                     Float.parseFloat(valueBuyText.getText().toString()),
                     Float.parseFloat(valueOptText.getText().toString()),
                     Float.parseFloat(valueSaleText.getText().toString()));
-            MainActivity.DB.AddProduct(product);
+            Repository.getDB().AddProduct(product);
         }else {
             EditText nameText = (EditText) findViewById(R.id.editText);
             EditText quantityText = (EditText) findViewById(R.id.editText2);
@@ -77,7 +77,7 @@ public class ProductPage extends Activity {
                     Float.parseFloat(valueBuyText.getText().toString()),
                     Float.parseFloat(valueOptText.getText().toString()),
                     Float.parseFloat(valueSaleText.getText().toString()));
-            MainActivity.DB.EditProduct(product);
+            Repository.getDB().EditProduct(product);
         }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
