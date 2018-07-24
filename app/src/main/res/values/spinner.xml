@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="planets_array">
+        <item>Иное</item>
+        <item>Перчатки</item>
+        <item>Лампочки</item>
+        <item>Фары</item>
+        <item>Инструменты</item>
+        <item>Расходники</item>
+    </string-array>
+</resources>

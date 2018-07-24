@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SearchView;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
     private StringAdapter adapter;
     private View footer;
     private LoadMoreAsyncTask loadingTask = new LoadMoreAsyncTask();
-
+    private boolean isEndList = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         }
 
         Repository.setProducts( Repository.getDB().GetProducts());
-
+        for(int i=0; i < Repository.getProducts().size(); i++){
+            System.out.println(Repository.getProducts().get(i).getName());
+        }
       /*  TableActivity tableActivity = new TableActivity();
         ScrollView scrollView = new ScrollView(getApplicationContext());
         scrollView.addView(tableActivity.Create(getApplicationContext(), products));
@@ -90,6 +93,9 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
 
     public Collection<Product> generate(int startIndex, int count) {
         List<Product> l = new ArrayList<Product>(count);
+        if(Repository.getProducts().size() < count)
+            count = Repository.getProducts().size();
+        if(Repository.getProducts().size() > startIndex)
         for (int i = 0; i < count; i++) {
             l.add(Repository.getProducts().get(startIndex+i));
         }
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
         list.setAdapter(adapter);
         list.setOnScrollListener(this);
-
+        loadingTask = new LoadMoreAsyncTask();
         loadingTask.execute(0);
     }
     @Override
@@ -281,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
     public void onScroll(AbsListView view, int firstVisible, int visibleCount, int totalCount) {
         boolean loadMore = firstVisible + visibleCount >= totalCount;
 
-        if (loadMore && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
+        if (loadMore && loadingTask.getStatus() == AsyncTask.Status.FINISHED ) {
             loadingTask = new LoadMoreAsyncTask();
             loadingTask.execute(totalCount);
         }
@@ -304,15 +310,20 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         @Override
         protected void onPostExecute(Collection<Product> data) {
             if (data.isEmpty()) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                //isEndList = true;
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listview_footer);
+                linearLayout.setVisibility(View.GONE);
+                //footer.isShown()
+            }else{
+                //Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
 
-            adapter.add(data);
-            adapter.notifyDataSetChanged();
-            int index = list.getFirstVisiblePosition();
-            int top = (list.getChildAt(0) == null) ? 0 : list.getChildAt(0).getTop();
-            list.setSelectionFromTop(index, top);
+
+                adapter.add(data);
+                adapter.notifyDataSetChanged();
+                int index = list.getFirstVisiblePosition();
+                int top = (list.getChildAt(0) == null) ? 0 : list.getChildAt(0).getTop();
+                list.setSelectionFromTop(index, top);
+            }
         }
     }
 }

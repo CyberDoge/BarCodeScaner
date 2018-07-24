@@ -7,13 +7,15 @@ public class Product {
     private float ValueBuy = .0f;
     private float ValueOpt = .0f;
     private float ValueSale = .0f;
-    public Product(String barCode, String name, int quantity, float valueBuy, float valueOpt, float valueSale){
+    private int Category = 0;
+    public Product(String barCode, String name, int quantity, float valueBuy, float valueOpt, float valueSale, int category){
         BarCode = barCode;
         Name = name;
         Quantity = quantity;
         ValueBuy = valueBuy;
         ValueOpt = valueOpt;
         ValueSale = valueSale;
+        Category = category;
     }
 
     public String getBarCode() {
@@ -62,5 +64,13 @@ public class Product {
 
     public void setValueSale(float valueSale) {
         ValueSale = valueSale;
+    }
+
+    public int getCategory() {
+        return Category;
+    }
+
+    public void setCategory(int category) {
+        Category = category;
     }
 }

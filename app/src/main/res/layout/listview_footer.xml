@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar"
-    android:padding="8dp" >
+    android:padding="8dp"
+    android:id="@+id/listview_footer">
 
     <ProgressBar
         android:id="@+id/loading_progress"

@@ -46,7 +46,7 @@ public class DataBase {//extends AsyncTask {
             //Class.forName("");
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://85.113.39.72:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",
+                    "jdbc:mysql://192.168.0.58:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",
                     "pauls", "123456");
             isCreated = true;
         } catch (Exception e) {
@@ -67,7 +67,8 @@ public class DataBase {//extends AsyncTask {
                         rs.getInt("quantity"),
                         rs.getFloat("valueBuy"),
                         rs.getFloat("valueOpt"),
-                        rs.getFloat("valueSale")
+                        rs.getFloat("valueSale"),
+                        rs.getInt("category")
                 );
                 products.add(product);
                 Last_Product = product;
@@ -90,7 +91,8 @@ public class DataBase {//extends AsyncTask {
                         rs.getInt("quantity"),
                         rs.getFloat("valueBuy"),
                         rs.getFloat("valueOpt"),
-                        rs.getFloat("valueSale")
+                        rs.getFloat("valueSale"),
+                        rs.getInt("category")
                 );
                 products.add(product);
                 Last_Product = product;
@@ -112,7 +114,8 @@ public class DataBase {//extends AsyncTask {
                         rs.getInt("quantity"),
                         rs.getFloat("valueBuy"),
                         rs.getFloat("valueOpt"),
-                        rs.getFloat("valueSale")
+                        rs.getFloat("valueSale"),
+                        rs.getInt("category")
                 );
                 return true;
             }
@@ -124,14 +127,16 @@ public class DataBase {//extends AsyncTask {
     public void AddProduct(Product product){
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO `Catalog`( `id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`) " +
+            stmt.executeUpdate(
+                    "INSERT INTO `Catalog`( `id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`, `category`) " +
                     "VALUES ( 0," +
                     " '"+product.getBarCode()+"'," +
                     " '"+product.getName()+"'," +
                     " "+product.getQuantity()+"," +
                     " "+product.getValueBuy()+"," +
                     " "+product.getValueOpt()+"," +
-                    " "+product.getValueSale()+" )");
+                    " "+product.getValueSale()+","+
+                    " "+product.getCategory()+ " )");
             Last_Product = product;
         }catch (Exception e){
             System.out.println(e);
@@ -148,7 +153,8 @@ public class DataBase {//extends AsyncTask {
                     "quantity="+product.getQuantity()+", "+
                     "valueBuy="+product.getValueBuy()+", "+
                     "valueSale="+product.getValueSale()+", "+
-                    "valueOpt="+product.getValueOpt()+
+                    "valueOpt="+product.getValueOpt()+", "+
+                    "category="+product.getCategory()+
                     " WHERE BarCode='"+product.getBarCode()+"'" );
             Last_Product = product;
         }catch (Exception e){

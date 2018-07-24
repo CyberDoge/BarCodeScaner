@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -16,6 +17,8 @@ public class ProductPage extends Activity {
 
     String barcode_text = "";
     boolean isCreated = false;
+    int Categore_chose = 0;
+    Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,14 +49,28 @@ public class ProductPage extends Activity {
             EditText valueSaleText = (EditText)findViewById(R.id.editText5);
             valueSaleText.setText(valueSale+"");
         }
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = (Spinner) findViewById(R.id.spinner);
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter =
-                ArrayAdapter.createFromResource(this, R.xml., android.R.layout.simple_spinner_item);
+                ArrayAdapter.createFromResource(this, R.array.planets_array, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinner.getSelectedItem() != null) {
+                    String line = (String) spinner.getSelectedItem();
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -68,12 +85,14 @@ public class ProductPage extends Activity {
             EditText valueBuyText = (EditText) findViewById(R.id.editText3);
             EditText valueOptText = (EditText) findViewById(R.id.editText4);
             EditText valueSaleText = (EditText) findViewById(R.id.editText5);
+
             Product product = new Product(barcode_text,
                     nameText.getText().toString(),
                     Integer.parseInt(quantityText.getText().toString()),
                     Float.parseFloat(valueBuyText.getText().toString()),
                     Float.parseFloat(valueOptText.getText().toString()),
-                    Float.parseFloat(valueSaleText.getText().toString()));
+                    Float.parseFloat(valueSaleText.getText().toString()),
+                    Categore_chose);
             Repository.getDB().AddProduct(product);
         }else {
             EditText nameText = (EditText) findViewById(R.id.editText);
@@ -86,7 +105,8 @@ public class ProductPage extends Activity {
                     Integer.parseInt(quantityText.getText().toString()),
                     Float.parseFloat(valueBuyText.getText().toString()),
                     Float.parseFloat(valueOptText.getText().toString()),
-                    Float.parseFloat(valueSaleText.getText().toString()));
+                    Float.parseFloat(valueSaleText.getText().toString()),
+                    Categore_chose);
             Repository.getDB().EditProduct(product);
         }
         Intent intent = new Intent(this, MainActivity.class);

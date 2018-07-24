@@ -45,7 +45,29 @@ public class StringAdapter extends ArrayAdapter<Product> {
                 "\n Опт: "+data.get(position).getValueOpt()+
                 "\n Розница: "+data.get(position).getValueSale();
         view.setText(text);
-        view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_launcher_foreground, 0, 0, 0);
+        switch (data.get(position).getCategory()){
+            case 0:
+                view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_other, 0, 0, 0);
+                break;
+            case 1:
+                view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_gloves, 0, 0, 0);
+                break;
+            case 2:
+                view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bubl, 0, 0, 0);
+                break;
+            case 3:
+                view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_car, 0, 0, 0);
+                break;
+            case 4:
+                view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tools, 0, 0, 0);
+                break;
+            case 5:
+                view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_all_incude, 0, 0, 0);
+                break;
+                default:
+                    view.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_launcher_foreground, 0, 0, 0);
+                    break;
+        }
         return view;
     }
 }
