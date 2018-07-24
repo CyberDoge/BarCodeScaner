@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         }
 
         Repository.setProducts( Repository.getDB().GetProducts());
-        for(int i=0; i < Repository.getProducts().size(); i++){
-            System.out.println(Repository.getProducts().get(i).getName());
-        }
+
       /*  TableActivity tableActivity = new TableActivity();
         ScrollView scrollView = new ScrollView(getApplicationContext());
         scrollView.addView(tableActivity.Create(getApplicationContext(), products));
@@ -127,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         startActivity(intent);
     }
     private void onCloseSearch(){
+        list = null;
         list = (ListView)findViewById(R.id.list);//listActivity.getListView();
         list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
         list.setAdapter(adapter);
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                runtest();
+                //runtest();
             }
         });
         searchView.setOnCloseListener(new android.support.v7.widget.SearchView.OnCloseListener() {
@@ -198,11 +197,15 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
 
         ArrayList<Product> products = Repository.getDB().FindProducts(text);
         if(products.size() != 0) {
+            list.setAdapter(null);
             list = (ListView)findViewById(R.id.list);//listActivity.getListView();
+
             list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
+            list.setAdapter(null);
+            adapter = new StringAdapter(this);
             list.setAdapter(adapter);
             list.setOnScrollListener(this);
-
+            loadingTask = new LoadMoreAsyncTask();
             loadingTask.execute(0);
         }else {
 
