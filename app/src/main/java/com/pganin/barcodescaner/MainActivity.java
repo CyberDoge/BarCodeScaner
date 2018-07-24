@@ -268,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
                 intent.putExtra("valueBuy", Repository.getDB().getLast_Product().getValueBuy());
                 intent.putExtra("valueOpt", Repository.getDB().getLast_Product().getValueOpt());
                 intent.putExtra("valueSale", Repository.getDB().getLast_Product().getValueSale());
+                intent.putExtra("category", Repository.getDB().getLast_Product().getCategory());
                 startActivity(intent);
             }else {
                 Intent intent = new Intent(this, ProductPage.class);

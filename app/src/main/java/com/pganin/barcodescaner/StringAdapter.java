@@ -43,7 +43,8 @@ public class StringAdapter extends ArrayAdapter<Product> {
         String text = data.get(position).getName()+
                 "\n Закуп: "+data.get(position).getValueBuy()+
                 "\n Опт: "+data.get(position).getValueOpt()+
-                "\n Розница: "+data.get(position).getValueSale();
+                "\n Розница: "+data.get(position).getValueSale()+
+                "\n Ка: "+data.get(position).getValueSale();;
         view.setText(text);
         switch (data.get(position).getCategory()){
             case 0:
