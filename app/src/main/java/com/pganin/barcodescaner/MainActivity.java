@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
             Repository.setDB( new DataBase() );
             Repository.getDB().Init();
             /*for(int i=250; i <1250; i++){
-                DB.AddTests(i);
+                Repository.getDB().AddTests(i);
             }*/
         }else if(!Repository.getDB().isCreated()){
             Repository.getDB().Init();
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         if(atSearching) {
             boolean loadMore = firstVisible + visibleCount >= totalCount;
 
-            if (loadMore && searchAsyncTask.getStatus() == AsyncTask.Status.FINISHED) {
+            if (loadMore && searchAsyncTask != null && searchAsyncTask.getStatus() == AsyncTask.Status.FINISHED) {
 
                 searchAsyncTask = new SearchAsyncTask();
                 searchAsyncTask.execute(totalCount);

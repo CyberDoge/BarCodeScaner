@@ -27,12 +27,12 @@ public class DataBase {//extends AsyncTask {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("INSERT INTO `Catalog`( `id`, `barcode`, `name`, `quantity`, `valueBuy`, `valueOpt`, `valueSale`) " +
                     "VALUES ( "+id+"," +
-                    " 'barcode_"+id+"'," +
-                    " 'name_"+id+"'," +
+                    " 'barcode "+Integer.toString(id, 16)+"'," +
+                    " 'name "+Integer.toString(id, 32)+"'," +
+                    " "+id/10+"," +
                     " "+id+"," +
                     " "+id+"," +
-                    " "+id+"," +
-                    " "+id+" )");
+                    " "+id*1.05f+" )");
 
         }catch (Exception e){
             System.out.println(e);
@@ -46,7 +46,7 @@ public class DataBase {//extends AsyncTask {
             //Class.forName("");
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.0.58:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",
+                    "jdbc:mysql://192.168.3.1:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",//192.168.0.58
                     "pauls", "123456");
             isCreated = true;
         } catch (Exception e) {
