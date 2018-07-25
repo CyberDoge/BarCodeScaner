@@ -48,8 +48,10 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
     private StringAdapter adapter;
     private View footer;
     private LoadMoreAsyncTask loadingTask = new LoadMoreAsyncTask();
-    private boolean isEndList = false;
+    private SearchAsyncTask searchAsyncTask = new SearchAsyncTask();
+    private boolean atSearching = false;
 
+    private ArrayList<Product> productsSearch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,16 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
 
     }
 
+    public Collection<Product> generateSearch(int startIndex, int count) {
+        List<Product> l = new ArrayList<Product>(count);
+        if(productsSearch.size() < count)
+            count = productsSearch.size();
+        if(productsSearch.size() > startIndex)
+            for (int i = 0; i < count; i++) {
+                l.add( productsSearch.get(i) );
+            }
+        return l;
+    }
     public Collection<Product> generate(int startIndex, int count) {
         List<Product> l = new ArrayList<Product>(count);
         if(Repository.getProducts().size() < count)
@@ -125,9 +137,12 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         startActivity(intent);
     }
     private void onCloseSearch(){
-        list = null;
+        atSearching = false;
+        searchAsyncTask=null;
+        list.setAdapter(null);
         list = (ListView)findViewById(R.id.list);//listActivity.getListView();
-        list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
+        list.addFooterView(footer);
+        adapter = new StringAdapter(this);
         list.setAdapter(adapter);
         list.setOnScrollListener(this);
         loadingTask = new LoadMoreAsyncTask();
@@ -194,9 +209,9 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
     }
 
     private void SearchActivityWindow(String text){
-
-        ArrayList<Product> products = Repository.getDB().FindProducts(text);
-        if(products.size() != 0) {
+        atSearching = true;
+        productsSearch = Repository.getDB().FindProducts(text);
+        if(productsSearch.size() != 0) {
             list.setAdapter(null);
             list = (ListView)findViewById(R.id.list);//listActivity.getListView();
 
@@ -205,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
             adapter = new StringAdapter(this);
             list.setAdapter(adapter);
             list.setOnScrollListener(this);
-            loadingTask = new LoadMoreAsyncTask();
-            loadingTask.execute(0);
+            searchAsyncTask = new SearchAsyncTask();
+            searchAsyncTask.execute(0);
         }else {
 
             Toast.makeText(this, "Ничего не найдено", Toast.LENGTH_LONG).show();
@@ -219,8 +234,9 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         if (!searchView.isIconified()) {
             searchView.setIconified(true);
             //findViewById(R.id.).setVisibility(View.VISIBLE);
-
+            System.out.println("push");
         } else {
+            System.out.println("!push");
             super.onBackPressed();
         }
     }
@@ -289,11 +305,55 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
 
     @Override
     public void onScroll(AbsListView view, int firstVisible, int visibleCount, int totalCount) {
-        boolean loadMore = firstVisible + visibleCount >= totalCount;
 
-        if (loadMore && loadingTask.getStatus() == AsyncTask.Status.FINISHED ) {
-            loadingTask = new LoadMoreAsyncTask();
-            loadingTask.execute(totalCount);
+        if(atSearching) {
+            boolean loadMore = firstVisible + visibleCount >= totalCount;
+
+            if (loadMore && searchAsyncTask.getStatus() == AsyncTask.Status.FINISHED) {
+
+                searchAsyncTask = new SearchAsyncTask();
+                searchAsyncTask.execute(totalCount);
+            }
+        }else {
+            boolean loadMore = firstVisible + visibleCount >= totalCount;
+            if (loadMore && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
+                loadingTask = new LoadMoreAsyncTask();
+                loadingTask.execute(totalCount);
+            }
+        }
+    }
+
+    private class SearchAsyncTask extends AsyncTask<Integer, Void, Collection<Product>> {
+        @SuppressWarnings("unchecked")
+        @Override
+        protected Collection<Product> doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+                Collection<Product> data = generateSearch(params[0].intValue(), 20);
+                return data;
+            } catch (Exception e) {
+                Log.e(TAG, "Loading data", e);
+            }
+            return Collections.EMPTY_LIST;
+        }
+
+        @Override
+        protected void onPostExecute(Collection<Product> data) {
+            if (data.isEmpty()) {
+                //isEndList = true;
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listview_footer);
+                linearLayout.setVisibility(View.GONE);
+                //footer.isShown()
+            }else{
+                //Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+
+
+                adapter.add(data);
+                adapter.notifyDataSetChanged();
+                int index = list.getFirstVisiblePosition();
+                int top = (list.getChildAt(0) == null) ? 0 : list.getChildAt(0).getTop();
+                list.setSelectionFromTop(index, top);
+            }
         }
     }
 
