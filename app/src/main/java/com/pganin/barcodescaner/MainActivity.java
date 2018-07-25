@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -83,6 +84,13 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         //new Intent(MainActivity.this, ListActivity.class);
         //listActivity.onCreate(savedInstanceState, );
         list = (ListView)findViewById(R.id.list);//listActivity.getListView();
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
+                view.setSelected(true);
+                startClick(position);
+            }
+        });
         list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
         list.setAdapter(adapter);
         list.setOnScrollListener(this);
@@ -90,7 +98,18 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         loadingTask.execute(0);
 
     }
-
+    private void startClick(int position){
+        Intent intent = new Intent(this, ProductPage.class);
+        intent.putExtra("is_created", true);//
+        intent.putExtra("name", Repository.getProducts().get(position).getName());
+        intent.putExtra("barcode", Repository.getProducts().get(position).getBarCode());
+        intent.putExtra("quantity", Repository.getProducts().get(position).getQuantity());
+        intent.putExtra("valueBuy", Repository.getProducts().get(position).getValueBuy());
+        intent.putExtra("valueOpt", Repository.getProducts().get(position).getValueOpt());
+        intent.putExtra("valueSale", Repository.getProducts().get(position).getValueSale());
+        intent.putExtra("category", Repository.getProducts().get(position).getCategory());
+        startActivity(intent);
+    }
     public Collection<Product> generateSearch(int startIndex, int count) {
         List<Product> l = new ArrayList<Product>(count);
         if(productsSearch.size() < count)
@@ -136,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         Intent intent = new Intent(this, SearchResultsActivity.class);
         startActivity(intent);
     }
+
     private void onCloseSearch(){
         atSearching = false;
         searchAsyncTask=null;
@@ -302,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
+
 
     @Override
     public void onScroll(AbsListView view, int firstVisible, int visibleCount, int totalCount) {

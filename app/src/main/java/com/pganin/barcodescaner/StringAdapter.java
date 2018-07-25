@@ -41,8 +41,8 @@ public class StringAdapter extends ArrayAdapter<Product> {
 
         TextView view = (TextView) super.getView(position, convertView, parent);
         String text = data.get(position).getName()+
-                "\n Закуп: "+data.get(position).getValueBuy()+
-                "\n Опт: "+data.get(position).getValueOpt()+
+                "\n Закуп:      "+data.get(position).getValueBuy()+
+                "\n Опт:          "+data.get(position).getValueOpt()+
                 "\n Розница: "+data.get(position).getValueSale();
         view.setText(text);
         switch (data.get(position).getCategory()){
