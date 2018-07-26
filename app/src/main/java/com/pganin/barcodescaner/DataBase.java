@@ -46,7 +46,7 @@ public class DataBase {//extends AsyncTask {
             //Class.forName("");
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.3.1:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",//192.168.0.58
+                    "jdbc:mysql://192.168.0.100:3306/AvtoMall?useUnicode=true&characterEncoding=UTF8",//192.168.0.58
                     "pauls", "123456");
             isCreated = true;
         } catch (Exception e) {

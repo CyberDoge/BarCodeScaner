@@ -31,6 +31,7 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_sale" />
@@ -42,6 +43,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_pluss" />
+        app:srcCompat="@drawable/ic_rubl" />
+
 
 </android.support.design.widget.CoordinatorLayout>
