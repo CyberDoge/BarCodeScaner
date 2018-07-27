@@ -54,9 +54,9 @@
             android:name=".ProductPage"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SaleActivity"
-            android:label="@string/title_activity_sale"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".Sale2Activity"
+            android:label="@string/title_activity_sale2"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

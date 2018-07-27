@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
                 //startActivity(intent);
                 return true;
             case R.id.plus:
-                Intent intent = new Intent(this, SaleActivity.class);
+                Intent intent = new Intent(this, Sale2Activity.class);
                 startActivity(intent);
                 return true;
             default:
