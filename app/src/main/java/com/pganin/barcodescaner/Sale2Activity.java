@@ -24,8 +24,9 @@ import java.util.List;
 
 public class Sale2Activity extends AppCompatActivity {
     private ListView list;
-    private StringAdapter adapter;
+    private SearchAdapter adapter;
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
+    private ArrayList<Product> products = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,7 @@ public class Sale2Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Продажа");
         if(adapter == null)
-            adapter = new StringAdapter(this);
+            adapter = new SearchAdapter(this);
 
         //if(footer == null)
         //    footer = getLayoutInflater().inflate(R.layout.listview_sale, null);
@@ -62,7 +63,15 @@ public class Sale2Activity extends AppCompatActivity {
                 startSearch();
             }
         });
+        if(!Repository.getBasket().isEmpty()){
+            for (Product p: Repository.getBasket()){
+                adapter.add(p);
 
+            }
+            adapter.notifyDataSetChanged();
+            Repository.getBasket().clear();
+            products.addAll(Repository.getBasket());
+        }
     }
     private void startSearch(){
         Intent intent = new Intent(this, SearchResultsActivity.class);
