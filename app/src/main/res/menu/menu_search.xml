@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/go_btn"
+        android:title="Добавить"
+        app:showAsAction="ifRoom" />
+</menu>

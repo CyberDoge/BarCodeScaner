@@ -7,19 +7,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sale2Activity extends AppCompatActivity {
     private ListView list;
     private StringAdapter adapter;
-
+    public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,9 @@ public class Sale2Activity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
                 view.setSelected(true);
+                //view.setBackgroundColor(0);
+                adapter.remove(position);
+                adapter.notifyDataSetChanged();
                 //startClick(position);
             }
         });
@@ -73,6 +82,7 @@ public class Sale2Activity extends AppCompatActivity {
             case R.id.sale_btn:
 //                Snackbar.make(item.getActionView(), "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                Toast.makeText(this, "Продано!!!", Toast.LENGTH_LONG).show();
                 LoadMainTask loadMainTask = new LoadMainTask();
                 loadMainTask.execute(0);
                 return true;
@@ -83,6 +93,40 @@ public class Sale2Activity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != CUSTOMIZED_REQUEST_CODE && requestCode != IntentIntegrator.REQUEST_CODE) {
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+        switch (requestCode) {
+            case CUSTOMIZED_REQUEST_CODE: {
+                Toast.makeText(this, "REQUEST_CODE = " + requestCode, Toast.LENGTH_LONG).show();
+                break;
+            }
+            default:
+                break;
+        }
+
+        IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
+
+        if(result.getContents() == null) {
+            Log.d("MainActivity", "Cancelled scan");
+            Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("Sale2Activity", "Scanned");
+            String barcode = result.getContents();
+            Toast.makeText(this, "Scanned : " + barcode, Toast.LENGTH_LONG).show();
+            if(Repository.getDB().FindProductByBarCode(barcode))
+            {
+                adapter.add(Repository.getDB().getLast_Product());
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

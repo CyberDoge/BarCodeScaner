@@ -13,6 +13,7 @@ import java.util.List;
 public class StringAdapter extends ArrayAdapter<Product> {
     private List<Product> data = new ArrayList<Product>();
 
+
     public StringAdapter(Context context) {
         super(context, android.R.layout.simple_list_item_1, new Product[0]);
     }
@@ -21,6 +22,12 @@ public class StringAdapter extends ArrayAdapter<Product> {
         this.data.addAll(data);
     }
 
+    public void add(Product product){
+        this.data.add(product);
+    }
+    public void remove(int pos){
+        this.data.remove(pos);
+    }
     @Override
     public int getCount() {
         return data.size();
