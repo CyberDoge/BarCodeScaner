@@ -69,7 +69,7 @@ public class Sale2Activity extends AppCompatActivity {
 
             }
             adapter.notifyDataSetChanged();
-            Repository.getBasket().clear();
+
             products.addAll(Repository.getBasket());
         }
     }
@@ -91,7 +91,9 @@ public class Sale2Activity extends AppCompatActivity {
             case R.id.sale_btn:
 //                Snackbar.make(item.getActionView(), "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                Repository.getBasket().clear();
                 Toast.makeText(this, "Продано!!!", Toast.LENGTH_LONG).show();
+
                 LoadMainTask loadMainTask = new LoadMainTask();
                 loadMainTask.execute(0);
                 return true;
@@ -127,8 +129,9 @@ public class Sale2Activity extends AppCompatActivity {
             Log.d("Sale2Activity", "Scanned");
             String barcode = result.getContents();
             Toast.makeText(this, "Scanned : " + barcode, Toast.LENGTH_LONG).show();
-            if(Repository.getDB().FindProductByBarCode(barcode))
+            if(Repository.getDB().FindProductByBarCode(barcode) && !Repository.getDB().getLast_Product().getIsAdd())
             {
+                Repository.getBasket().add(Repository.getDB().getLast_Product());
                 adapter.add(Repository.getDB().getLast_Product());
                 adapter.notifyDataSetChanged();
             }

@@ -26,9 +26,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity implements AbsListView.OnScrollListener {
-    ArrayList<Product> basket = new ArrayList<>();
+    private static ArrayList<Product> basket = new ArrayList<>();
+
+    public static ArrayList<Product> getBasket() {
+        return basket;
+    }
+
+    public static void setBasket(ArrayList<Product> basket) {
+        SearchResultsActivity.basket = basket;
+    }
+
     private ListView list;
-    private StringAdapter adapter;
+    private SearchAdapter adapter;
     private View footer;
     private LoadMoreAsyncTask loadingTask = new LoadMoreAsyncTask();
 
@@ -37,26 +46,31 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
         if(adapter == null)
-            adapter = new StringAdapter(this);
-
+            adapter = new SearchAdapter(this);
+        basket = new ArrayList<>();
         if(footer == null)
             footer = getLayoutInflater().inflate(R.layout.listview_footer, null);
         //ListActivity listActivity = new ListActivity();
         //new Intent(MainActivity.this, ListActivity.class);
         //listActivity.onCreate(savedInstanceState, );
         list = (ListView)findViewById(R.id.list);//listActivity.getListView();
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
                 view.setSelected(true);
                 ((TextView) view).setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done, 0, 0, 0);
                 basket.add(Repository.getProducts().get(position));
             }
-        });
+        });*/
         list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
         list.setAdapter(adapter);
         list.setOnScrollListener(this);
         loadingTask.execute(0);
+        //if(!Repository.getBasket().isEmpty()){
+          // adapter.add(Repository.getBasket());
+        adapter.notifyDataSetChanged();
+        //}
+        //Repository.getBasket().clear();
     }
 
     @Override
@@ -75,7 +89,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
 //                        .setAction("Action", null).show();
                 Toast.makeText(this, "Добавлено", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, Sale2Activity.class);
-                Repository.setBasket(basket);
+                Repository.getBasket().addAll(basket);
+                basket.clear();
                 startActivity(intent);
                 return true;
 

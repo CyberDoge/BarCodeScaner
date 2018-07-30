@@ -8,6 +8,25 @@ public class Product {
     private float ValueOpt = .0f;
     private float ValueSale = .0f;
     private int Category = 0;
+    private int QuantityInBasket = 0;
+    private boolean IsAdd = false;
+
+    public boolean getIsAdd() {
+        return IsAdd;
+    }
+
+    public void setIsAdd(boolean add) {
+        IsAdd = add;
+    }
+
+    public int getQuantityInBasket() {
+        return QuantityInBasket;
+    }
+
+    public void setQuantityInBasket(int quantityInBasket) {
+        QuantityInBasket = quantityInBasket;
+    }
+
     public Product(String barCode, String name, int quantity, float valueBuy, float valueOpt, float valueSale, int category){
         BarCode = barCode;
         Name = name;
