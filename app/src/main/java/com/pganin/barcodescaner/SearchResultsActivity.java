@@ -26,15 +26,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity implements AbsListView.OnScrollListener {
-    private static ArrayList<Product> basket = new ArrayList<>();
+    //private static ArrayList<Basket> basket = new ArrayList<>();
 
-    public static ArrayList<Product> getBasket() {
-        return basket;
-    }
+    //public static ArrayList<Basket> getBasket() {
+    //    return basket;
+    //}
 
-    public static void setBasket(ArrayList<Product> basket) {
-        SearchResultsActivity.basket = basket;
-    }
+    //public static void setBasket(ArrayList<Basket> basket) {
+    //    SearchResultsActivity.basket = basket;
+    //}
 
     private ListView list;
     private SearchAdapter adapter;
@@ -47,7 +47,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
         setContentView(R.layout.activity_result);
         if(adapter == null)
             adapter = new SearchAdapter(this);
-        basket = new ArrayList<>();
+        //basket = new ArrayList<>();
         if(footer == null)
             footer = getLayoutInflater().inflate(R.layout.listview_footer, null);
         //ListActivity listActivity = new ListActivity();
@@ -71,6 +71,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
         adapter.notifyDataSetChanged();
         //}
         //Repository.getBasket().clear();
+
     }
 
     @Override
@@ -89,8 +90,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
 //                        .setAction("Action", null).show();
                 Toast.makeText(this, "Добавлено", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, Sale2Activity.class);
-                Repository.getBasket().addAll(basket);
-                basket.clear();
+                Repository.getBasket().addAll(adapter.get());
+                adapter.clear();
                 startActivity(intent);
                 return true;
 
@@ -112,23 +113,23 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
         }
     }
 
-    public Collection<Product> generate(int startIndex, int count) {
-        List<Product> l = new ArrayList<Product>(count);
+    public Collection<Basket> generate(int startIndex, int count) {
+        List<Basket> l = new ArrayList<Basket>(count);
         if(Repository.getProducts().size() < count)
             count = Repository.getProducts().size();
         if(Repository.getProducts().size() > startIndex)
             for (int i = 0; i < count; i++) {
-                l.add(Repository.getProducts().get(startIndex+i));
+                l.add(Repository.getProducts().get(startIndex+i).toBasket());
             }
         return l;
     }
-    private class LoadMoreAsyncTask extends AsyncTask<Integer, Void, Collection<Product>> {
+    private class LoadMoreAsyncTask extends AsyncTask<Integer, Void, Collection<Basket>> {
         @SuppressWarnings("unchecked")
         @Override
-        protected Collection<Product> doInBackground(Integer... params) {
+        protected Collection<Basket> doInBackground(Integer... params) {
             try {
                 Thread.sleep(1000);
-                Collection<Product> data = generate(params[0].intValue(), 20);
+                Collection<Basket> data = generate(params[0].intValue(), 20);
                 return data;
             } catch (Exception e) {
                 //Log.e(TAG, "Loading data", e);
@@ -137,7 +138,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
         }
 
         @Override
-        protected void onPostExecute(Collection<Product> data) {
+        protected void onPostExecute(Collection<Basket> data) {
             if (data.isEmpty()) {
                 //isEndList = true;
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listview_footer);
@@ -146,7 +147,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AbsListV
             }else{
                 //Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
 
-
+                //ArrayList<Product>
                 adapter.add(data);
                 adapter.notifyDataSetChanged();
                 int index = list.getFirstVisiblePosition();

@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,10 +22,11 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Sale2Activity extends AppCompatActivity {
     private ListView list;
-    private SearchAdapter adapter;
+    private static SaleAdapter adapter;
     public final int CUSTOMIZED_REQUEST_CODE = 0x0000ffff;
     private ArrayList<Product> products = new ArrayList<>();
     @Override
@@ -35,25 +37,8 @@ public class Sale2Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Продажа");
         if(adapter == null)
-            adapter = new SearchAdapter(this);
-
-        //if(footer == null)
-        //    footer = getLayoutInflater().inflate(R.layout.listview_sale, null);
-        //ListActivity listActivity = new ListActivity();
-        //new Intent(MainActivity.this, ListActivity.class);
-        //listActivity.onCreate(savedInstanceState, );
-        list = (ListView)findViewById(R.id.list_sale);//listActivity.getListView();
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
-                view.setSelected(true);
-                //view.setBackgroundColor(0);
-                adapter.remove(position);
-                adapter.notifyDataSetChanged();
-                //startClick(position);
-            }
-        });
-        //list.addFooterView(footer); // it's important to call 'addFooter' before 'setAdapter'
+            adapter = new SaleAdapter(this);
+        list = (ListView)findViewById(R.id.list_sale);
         list.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -64,14 +49,18 @@ public class Sale2Activity extends AppCompatActivity {
             }
         });
         if(!Repository.getBasket().isEmpty()){
-            for (Product p: Repository.getBasket()){
+            for (Basket p: Repository.getBasket()){
+
                 adapter.add(p);
 
             }
             adapter.notifyDataSetChanged();
-
+            Repository.getBasket().clear();
             products.addAll(Repository.getBasket());
         }
+    }
+    public static void Refresh(){
+        adapter.notifyDataSetChanged();
     }
     private void startSearch(){
         Intent intent = new Intent(this, SearchResultsActivity.class);
@@ -129,11 +118,16 @@ public class Sale2Activity extends AppCompatActivity {
             Log.d("Sale2Activity", "Scanned");
             String barcode = result.getContents();
             Toast.makeText(this, "Scanned : " + barcode, Toast.LENGTH_LONG).show();
-            if(Repository.getDB().FindProductByBarCode(barcode) && !Repository.getDB().getLast_Product().getIsAdd())
+
+            if(Repository.getDB().FindProductByBarCode(barcode))
             {
-                Repository.getBasket().add(Repository.getDB().getLast_Product());
-                adapter.add(Repository.getDB().getLast_Product());
-                adapter.notifyDataSetChanged();
+                if(Repository.getBasket().stream().filter( c -> c.getBarCode().equals(Repository.getDB().getLast_Product().getBarCode()))
+                        .collect(Collectors.toList()).isEmpty()) {
+                    Repository.getBasket().add(Repository.getDB().getLast_Product().toBasket());
+
+                    adapter.add(Repository.getDB().getLast_Product().toBasket());
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
 

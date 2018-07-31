@@ -15,20 +15,24 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class SearchAdapter extends ArrayAdapter<Product> {
-        private List<Product> data = new ArrayList<Product>();
-
+public class SearchAdapter extends ArrayAdapter<Basket> {
+        private List<Basket> data = new ArrayList<Basket>();
+        private ArrayList<Basket> basket = new ArrayList<>();
 
         public SearchAdapter(Context context) {
-            super(context, 0, new Product[0]);
+            super(context, 0, new Basket[0]);
         }
 
-        public void add(Collection<Product> data) {
+        public void add(Collection<Basket> data) {
             this.data.addAll(data);
         }
 
-        public void add(Product product){
+        public List<Basket> get(){
+            return basket;
+        }
+        public void add(Basket product){
             this.data.add(product);
         }
         public void remove(int pos){
@@ -40,15 +44,15 @@ public class SearchAdapter extends ArrayAdapter<Product> {
         }
 
         @Override
-        public int getPosition(Product item) {
+        public int getPosition(Basket item) {
             return data.indexOf(item);
         }
 
         @Override
-        public Product getItem(int position) {
+        public Basket getItem(int position) {
             return data.get(position);
         }
-
+        private int quantityIn = 0;
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
@@ -58,17 +62,20 @@ public class SearchAdapter extends ArrayAdapter<Product> {
             final TextView Name = (TextView) convertView.findViewById(R.id.name);
             EditText quantity = (EditText) convertView.findViewById(R.id.quantity);
             Button button = (Button) convertView.findViewById(R.id.btn_add);
-
-            if(data.get(position).getQuantityInBasket() != 0)
-               quantity.setText(data.get(position).getQuantityInBasket()+"", TextView.BufferType.EDITABLE);
+            //if(data.get(position).getQuatityInBasket() != 0)
+            //    quantityIn = data.get(position).getQuatityInBasket();
+            if(data.get(position).getQuatityInBasket() != 0)
+                quantity.setText(data.get(position).getQuatityInBasket()+"", TextView.BufferType.EDITABLE);
 
             quantity.addTextChangedListener(new TextWatcher() {
 
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (!s.toString().isEmpty()) {
-                        data.get(positionIn).setQuantityInBasket(Integer.parseInt(s.toString()));
-                        Repository.getProducts().get(positionIn).setQuantityInBasket(Integer.parseInt(s.toString()));
+                        //quantityIn = Integer.parseInt(s.toString());
+                        data.get(positionIn).setQuatityInBasket(Integer.parseInt(s.toString()));
+
+                        //Repository.getProducts().get(positionIn).setQuantityInBasket(Integer.parseInt(s.toString()));
                     }
                 }
 
@@ -109,10 +116,14 @@ public class SearchAdapter extends ArrayAdapter<Product> {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(Repository.getProducts().get(positionIn).getQuantityInBasket() != 0 && !Repository.getProducts().get(positionIn).getIsAdd() ) {
-                        SearchResultsActivity.getBasket().add(Repository.getProducts().get(positionIn));
+                    if(data.get(positionIn).getQuatityInBasket() != 0 &&
+                            Repository.getBasket().stream().filter(
+                                    c -> c.getBarCode().equals(Repository.getProducts().get(positionIn).getBarCode())
+                            ).collect(Collectors.toList()).isEmpty()) {
+                        Basket b = Repository.getProducts().get(positionIn).getBasket(quantityIn);
+                        basket.add(b);
                         Name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done, 0, 0, 0);
-                        Repository.getProducts().get(positionIn).setIsAdd( true );
+                        //Repository.getProducts().get(positionIn).setIsAdd( true );
                     }
                 }
             });

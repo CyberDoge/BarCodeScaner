@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Repository {
     private static DataBase DB;
     private static ArrayList<Product> products = new ArrayList<>();
-    private static ArrayList<Product> basket = new ArrayList<>();
+    private static ArrayList<Basket> basket = new ArrayList<>();
 
-    public static ArrayList<Product> getBasket() {
+    public static ArrayList<Basket> getBasket() {
         return basket;
     }
 
-    public static void setBasket(ArrayList<Product> basket) {
+    public static void setBasket(ArrayList<Basket> basket) {
         Repository.basket = basket;
     }
 

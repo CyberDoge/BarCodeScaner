@@ -8,10 +8,10 @@ public class Product {
     private float ValueOpt = .0f;
     private float ValueSale = .0f;
     private int Category = 0;
-    private int QuantityInBasket = 0;
-    private boolean IsAdd = false;
+    //private int QuantityInBasket = 0;
+    //private boolean IsAdd = false;
 
-    public boolean getIsAdd() {
+    /*public boolean getIsAdd() {
         return IsAdd;
     }
 
@@ -23,9 +23,9 @@ public class Product {
         return QuantityInBasket;
     }
 
-    public void setQuantityInBasket(int quantityInBasket) {
+    /public void setQuantityInBasket(int quantityInBasket) {
         QuantityInBasket = quantityInBasket;
-    }
+    }*/
 
     public Product(String barCode, String name, int quantity, float valueBuy, float valueOpt, float valueSale, int category){
         BarCode = barCode;
@@ -91,5 +91,14 @@ public class Product {
 
     public void setCategory(int category) {
         Category = category;
+    }
+
+    public Basket getBasket(int quantity){
+        Basket b = new Basket(getBarCode(),getName(),getQuantity(),getValueBuy(),getValueOpt(),getValueSale(),getCategory(), quantity);
+        return b;
+    }
+    public Basket toBasket(){
+        Basket b = new Basket(getBarCode(),getName(),getQuantity(),getValueBuy(),getValueOpt(),getValueSale(),getCategory(), 0);
+        return b;
     }
 }
