@@ -52,7 +52,7 @@ public class SearchAdapter extends ArrayAdapter<Basket> {
         public Basket getItem(int position) {
             return data.get(position);
         }
-        private int quantityIn = 0;
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
@@ -60,12 +60,12 @@ public class SearchAdapter extends ArrayAdapter<Basket> {
             }
             final int positionIn = position;
             final TextView Name = (TextView) convertView.findViewById(R.id.name);
-            EditText quantity = (EditText) convertView.findViewById(R.id.quantity);
+            //EditText quantity = (EditText) convertView.findViewById(R.id.quantity_);
             Button button = (Button) convertView.findViewById(R.id.btn_add);
             //if(data.get(position).getQuatityInBasket() != 0)
             //    quantityIn = data.get(position).getQuatityInBasket();
-            if(data.get(position).getQuatityInBasket() != 0)
-                quantity.setText(data.get(position).getQuatityInBasket()+"", TextView.BufferType.EDITABLE);
+           /* if(data.get(position).getQuatityInBasket() == 0)
+                quantity.setText("", TextView.BufferType.EDITABLE);
 
             quantity.addTextChangedListener(new TextWatcher() {
 
@@ -74,7 +74,7 @@ public class SearchAdapter extends ArrayAdapter<Basket> {
                     if (!s.toString().isEmpty()) {
                         //quantityIn = Integer.parseInt(s.toString());
                         data.get(positionIn).setQuatityInBasket(Integer.parseInt(s.toString()));
-
+                        //System.out.println("pos: " + positionIn );
                         //Repository.getProducts().get(positionIn).setQuantityInBasket(Integer.parseInt(s.toString()));
                     }
                 }
@@ -84,7 +84,8 @@ public class SearchAdapter extends ArrayAdapter<Basket> {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            });
+            });*/
+            //System.out.println( "text: " + quantity.getText() );
             String text = data.get(position).getName()+
                     "\n Закуп:      "+data.get(position).getValueBuy()+
                     "\n Опт:          "+data.get(position).getValueOpt()+
@@ -113,13 +114,14 @@ public class SearchAdapter extends ArrayAdapter<Basket> {
                     Name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_launcher_foreground, 0, 0, 0);
                     break;
             }
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(data.get(positionIn).getQuatityInBasket() != 0 &&
-                            Repository.getBasket().stream().filter(
+                    if(basket.stream().filter(
                                     c -> c.getBarCode().equals(Repository.getProducts().get(positionIn).getBarCode())
                             ).collect(Collectors.toList()).isEmpty()) {
+                        int quantityIn = 0;//Integer.parseInt(quantity.getText().toString());
                         Basket b = Repository.getProducts().get(positionIn).getBasket(quantityIn);
                         basket.add(b);
                         Name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_done, 0, 0, 0);
